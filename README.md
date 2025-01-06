@@ -1,5 +1,6 @@
 # pdf
 
-a simple pdf viewer for dark readers base on pdfjs and vscode-pdf.
+a simple pdf viewer for dark mode enthusiasts base on pdfjs and vscode-pdf, Features a top scrollbar for easy switching between original and dark themes.
 
-![screenshot](./darkpdf.jpg)
+![screenshot](./darkpdf.png)
+![screenshot](./lightpdf.png)
