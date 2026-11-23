@@ -1,0 +1,206 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+#pdf-viewer {
+  display: block;
+  border: none;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+/* Dark theme (#5, #7). --darkpdf-invert is set by lib/main.js, 0 to 1. */
+body.darkpdf-dark {
+  --main-color: rgba(249, 249, 250, 1);
+  --body-bg-color: rgba(42, 42, 46, 1);
+  --progressBar-color: rgba(0, 96, 223, 1);
+  --progressBar-indeterminate-bg-color: rgba(40, 40, 43, 1);
+  --progressBar-indeterminate-blend-color: rgba(20, 68, 133, 1);
+  --scrollbar-color: rgba(121, 121, 123, 1);
+  --scrollbar-bg-color: rgba(35, 35, 39, 1);
+  --toolbar-icon-bg-color: rgba(255, 255, 255, 1);
+  --toolbar-icon-hover-bg-color: rgba(255, 255, 255, 1);
+  --sidebar-narrow-bg-color: rgba(42, 42, 46, 0.9);
+  --sidebar-toolbar-bg-color: rgba(50, 50, 52, 1);
+  --toolbar-bg-color: rgba(56, 56, 61, 1);
+  --toolbar-border-color: rgba(12, 12, 13, 1);
+  --button-hover-color: rgba(102, 102, 103, 1);
+  --toggled-btn-color: rgba(255, 255, 255, 1);
+  --toggled-btn-bg-color: rgba(0, 0, 0, 0.3);
+  --toggled-hover-active-btn-color: rgba(0, 0, 0, 0.4);
+  --dropdown-btn-bg-color: rgba(74, 74, 79, 1);
+  --field-color: rgba(250, 250, 250, 1);
+  --field-bg-color: rgba(64, 64, 68, 1);
+  --field-border-color: rgba(115, 115, 115, 1);
+  --treeitem-color: rgba(255, 255, 255, 0.8);
+  --treeitem-hover-color: rgba(255, 255, 255, 0.9);
+  --treeitem-selected-color: rgba(255, 255, 255, 0.9);
+  --treeitem-selected-bg-color: rgba(255, 255, 255, 0.25);
+  --sidebaritem-bg-color: rgba(255, 255, 255, 0.15);
+  --doorhanger-bg-color: rgba(74, 74, 79, 1);
+  --doorhanger-border-color: rgba(39, 39, 43, 1);
+  --doorhanger-hover-color: rgba(249, 249, 250, 1);
+  --doorhanger-hover-bg-color: rgba(93, 94, 98, 1);
+  --doorhanger-separator-color: rgba(92, 92, 97, 1);
+  --dialog-button-bg-color: rgba(92, 92, 97, 1);
+  --dialog-button-hover-bg-color: rgba(115, 115, 115, 1);
+  --loading-icon: url(images/loading-dark.svg);
+}
+
+body.darkpdf-dark .pdfViewer .page {
+  background-color: #000;
+}
+
+body.darkpdf-dark .pdfViewer .canvasWrapper,
+body.darkpdf-dark #thumbnailView .thumbnailImage {
+  filter: invert(var(--darkpdf-invert, 1)) hue-rotate(180deg) var(--darkpdf-extra-filter, sepia(0));
+}
+
+/* Paper tint, used by the sepia/custom presets. */
+body.darkpdf-paper .pdfViewer .page::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--darkpdf-paper, #f4ecd8);
+  mix-blend-mode: multiply;
+}
+
+/* Image-preserving mode: pages are inverted on a separate canvas layer. */
+body.darkpdf-smart-invert .pdfViewer .canvasWrapper {
+  filter: none;
+}
+.pdfViewer .canvasWrapper canvas.darkpdf-smart {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Text selection stays readable on a dark page. */
+body.darkpdf-dark .textLayer ::selection {
+  background: rgba(120, 170, 255, 0.45);
+}
+
+@media print {
+  body .pdfViewer .canvasWrapper,
+  body #thumbnailView .thumbnailImage {
+    filter: none !important;
+  }
+  body .pdfViewer .page::after {
+    display: none;
+  }
+  .toolbar {
+    display: none !important;
+  }
+}
+
+/* Auto-hiding toolbar (#3). */
+body.darkpdf-autohide .toolbar {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+body.darkpdf-autohide .toolbar:hover,
+body.darkpdf-autohide .toolbar:focus-within,
+body.darkpdf-theme-menu-open .toolbar {
+  opacity: 1;
+}
+
+/* Toolbar theme dropdown and lock button. The lock icon is drawn with a
+   CSS mask like every other pdf.js toolbar icon: 16x16 at top/left 6px
+   inside the 28x28 button, colored by --toolbar-icon-bg-color. */
+#toolbarLock {
+  position: relative;
+}
+#toolbarLock::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 16px;
+  height: 16px;
+  background-color: var(--toolbar-icon-bg-color);
+  -webkit-mask-size: cover;
+          mask-size: cover;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 9.9-1'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 9.9-1'/%3E%3C/svg%3E");
+}
+#toolbarLock:hover::before,
+#toolbarLock:focus-visible::before {
+  background-color: var(--toolbar-icon-hover-bg-color);
+}
+
+/* Theme menu: a doorhanger popup like the Tools menu, opened by the
+   theme button with a menu-unfold icon (data URI, so it does not depend
+   on the relative icon paths in viewer.css). */
+#themeMenuToggle::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6h16'/%3E%3Cpath d='M6.5 3.5L4 6l2.5 2.5'/%3E%3Cpath d='M4 12h16'/%3E%3Cpath d='M4 18h16'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6h16'/%3E%3Cpath d='M6.5 3.5L4 6l2.5 2.5'/%3E%3Cpath d='M4 12h16'/%3E%3Cpath d='M4 18h16'/%3E%3C/svg%3E");
+}
+#themeMenuToggle.toggled {
+  color: var(--toggled-btn-color);
+  background-color: var(--toggled-btn-bg-color);
+}
+#themeMenuToggle.toggled::before {
+  background-color: var(--toggled-btn-color);
+}
+#themeMenuToggle.toggled:hover:active {
+  background-color: var(--toggled-hover-active-btn-color);
+}
+#themeMenuButtonContainer {
+  max-width: 220px;
+  min-height: 26px;
+  max-height: calc(var(--viewer-container-height) - 40px);
+  overflow-y: auto;
+  margin-bottom: -4px;
+}
+#themeMenu .secondaryToolbarButton.toggled {
+  color: var(--toggled-btn-color);
+  background-color: var(--toggled-btn-bg-color);
+}
+/* Theme menu items carry no icon, so drop the ::before placeholder the
+   viewer.css rule draws for secondaryToolbarButton and its 36px gutter. */
+#themeMenu .secondaryToolbarButton::before {
+  display: none;
+}
+[dir="ltr"] #themeMenu .secondaryToolbarButton {
+  padding-left: 4px;
+}
+#themeMenu .secondaryToolbarButton {
+  padding-inline-start: 4px;
+}
+/* The Help entry sits at the bottom, separated from the themes by a
+   hairline so it reads as a distinct action. */
+#themeMenu .themeMenuHelp {
+  margin-top: 4px;
+  border-top: 1px solid var(--doorhanger-border-color);
+  padding-top: 4px;
+}
+/* The caret keeps the viewer.css default: its center sits 10px inside the
+   doorhanger's right edge, which lines up with the theme button, now the
+   rightmost element of the toolbar (the spot the Tools button used to
+   occupy). No override needed. */
+/* The Tools menu doorhanger was the rightmost popup before the theme
+   button was added to its right, so its caret used the viewer.css
+   default. Shift it one button-width left (28px button + 2px margins)
+   so it keeps pointing at the Tools button instead of the theme button. */
+[dir="ltr"] #secondaryToolbar.doorHangerRight:after,
+[dir="ltr"] #secondaryToolbar.doorHangerRight:before {
+  right: 40px;
+  inset-inline-end: 40px;
+}
+body.darkpdf-locked #toolbarLock::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");
+}
+body.darkpdf-locked #toolbarLock {
+  background-color: var(--toggled-btn-bg-color, rgba(0, 0, 0, 0.3));
+}
+body.darkpdf-autohide.darkpdf-locked .toolbar {
+  opacity: 1;
+}

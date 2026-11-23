@@ -1,0 +1,22 @@
+# Build output and installed dependencies
+out/
+node_modules/
+*.vsix
+
+# Local editor, lint and automation state
+.vscode/
+.vscodeignore
+.editorconfig
+.eslintignore
+.vscode-test/
+.screenshots/
+.playwright-cli/
+.codebuddy/
+
+# Local-only documentation drafts
+docs/
+
+# OS / log noise
+.DS_Store
+Thumbs.db
+*.log
